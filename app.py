@@ -525,6 +525,102 @@ if show_plots:
         ax2.set_title("Violations per Driver")
         st.image(_png_from_matplotlib(fig2)); plt.close(fig2)
 
+# =====================================================
+# GUIDELINES & EXPLANATIONS SECTION
+# =====================================================
+with st.expander("📘 Guidelines and Interpretations", expanded=False):
+    st.markdown("### Purpose")
+    st.write("""
+    This application generates **synthetic datasets** commonly used in traffic and transportation research. 
+    Each dataset category represents a different data collection or simulation domain.
+    The generated data are **statistically realistic** but do not represent real-world observations.
+    """)
+
+    if dataset_type == "Traffic Flow (Static)":
+        st.markdown("### 🚗 Traffic Flow (Static)")
+        st.write("""
+        - **Purpose:** Generates point-based traffic stream data representing flow, speed, and density 
+          based on fundamental diagram models.
+        - **Key Variables:**
+            - **Flow (veh/h):** Number of vehicles passing a section per hour.
+            - **Speed (km/h):** Average stream speed at that section.
+            - **Density (veh/km):** Number of vehicles occupying one kilometer of roadway.
+            - **Occupancy (%):** Proportion of roadway covered by vehicles.
+        - **Models:**
+            - **Greenshields:** Linear speed–density relationship.
+            - **Greenberg:** Logarithmic model suitable for dense flow.
+            - **Underwood:** Exponential relationship for stable traffic.
+        - **Use Case:** Calibration and validation of macroscopic models or data-driven flow prediction.
+        """)
+
+    elif dataset_type == "Traffic Flow (Time Series, 24h)":
+        st.markdown("### ⏱️ Traffic Flow (Time Series, 24h)")
+        st.write("""
+        - **Purpose:** Simulates 24-hour traffic patterns for multiple sections or detectors.
+        - **Mechanism:**
+            - Uses **diurnal profiles** (morning/evening peaks) for **Weekday/Weekend** variations.
+            - Adds **weather multipliers** and stochastic hourly fluctuations.
+        - **Key Parameters:**
+            - **Base hourly demand:** Sets mean flow magnitude.
+            - **Noise level:** Controls random variability in each hour.
+            - **Weather multiplier:** Reduces/increases flows under Rain/Fog.
+        - **Use Case:** Microsimulation inputs (e.g., SUMO), detector emulation, or forecasting experiments.
+        """)
+
+    elif dataset_type == "Incidents (Events)":
+        st.markdown("### 🚨 Traffic Incidents (Events)")
+        st.write("""
+        - **Purpose:** Generates a list of **incident events** along a corridor or network, 
+          such as crashes, breakdowns, obstacles, and work zones.
+        - **Mechanism:**
+            - Uses **Non-Homogeneous Poisson Process (NHPP)** to simulate varying hourly rates.
+            - Severity and response/clearance times depend on weather and hour.
+        - **Key Variables:**
+            - **Incident_Type:** Crash, Breakdown, Obstacle, or Construction.
+            - **Severity:** Minor, Major, or Fatal.
+            - **Response / Clearance Times:** Duration distributions (gamma-based) correlated with severity.
+        - **Use Case:** Reliability analysis, incident management modeling, or stochastic simulation inputs.
+        """)
+
+    elif dataset_type == "Accidents (Cases)":
+        st.markdown("### 🧍 Accident Case Records")
+        st.write("""
+        - **Purpose:** Creates synthetic crash records representing vehicle, environment, and driver factors.
+        - **Mechanism:**
+            - Correlates **speed**, **driver age**, and **reaction time** via Gaussian Copula.
+            - Severity levels depend on **speed**, **lighting**, and **weather conditions**.
+        - **Key Variables:**
+            - **Vehicle_Type:** Car, Bus, Truck, Motorcycle.
+            - **Road_Type:** Urban, Rural, or Highway.
+            - **Lighting:** Daylight, Night, Twilight.
+            - **Injury_Level:** None, Minor, Serious, Fatal.
+        - **Use Case:** Crash severity modeling, logistic regression, or safety data synthesis.
+        """)
+
+    elif dataset_type == "Driver Behavior (Cross-Section)":
+        st.markdown("### 👤 Driver Behavior Data")
+        st.write("""
+        - **Purpose:** Simulates human behavioral attributes relevant to safety and driving performance.
+        - **Mechanism:**
+            - Uses correlated variables for **age**, **experience**, **reaction time**, and **aggressiveness**.
+            - Behavioral outcomes (violations, phone use) are derived probabilistically.
+        - **Key Variables:**
+            - **Aggressiveness (0–10):** Continuous behavioral score.
+            - **Reaction Time (s):** Average driver response delay.
+            - **Violations_Last_Year:** Annual rule violation count.
+            - **Phone_Use_While_Driving:** Binary indicator of distraction.
+        - **Use Case:** Risk behavior analysis, survey simulation, or SmartPLS latent variable testing.
+        """)
+
+    st.markdown("### General Recommendations")
+    st.write("""
+    - Use **clear weather** for base calibration, and then test **Rainy/Foggy** as sensitivity scenarios.
+    - For **model validation**, fix the random seed to ensure reproducibility.
+    - Always review **metadata.json** for parameter documentation and provenance.
+    - Synthetic data are ideal for algorithm testing, regression, ML modeling, and educational assignments.
+    """)
+
+
 # ------------------------- Downloads -------------------------
 st.markdown("---")
 st.subheader("⬇️ Download")
