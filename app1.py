@@ -619,6 +619,57 @@ with st.expander("📘 Guidelines and Interpretations", expanded=False):
     - Always review **metadata.json** for parameter documentation and provenance.
     - Synthetic data are ideal for algorithm testing, regression, ML modeling, and educational assignments.
     """)
+    # =====================================================
+    # DATA GENERATION METHODOLOGY FLOWCHART
+    # =====================================================
+    st.markdown("### 🧭 Methodology Overview")
+    st.write("This diagram summarizes the logical flow of synthetic data generation for each dataset type.")
+
+    import graphviz
+    dot = graphviz.Digraph()
+
+    if dataset_type.startswith("Traffic Flow"):
+        dot.attr("node", shape="box", style="rounded,filled", color="#004e92", fillcolor="#e8f1fb")
+        dot.node("A", "User Inputs\n(vf, kj, Weather, Noise, Model)")
+        dot.node("B", "Fundamental Diagram Model\n(Greenshields / Greenberg / Underwood)")
+        dot.node("C", "Randomized Density–Speed Samples")
+        dot.node("D", "Derived Flow, Occupancy, Hourly Variations")
+        dot.node("E", "Synthetic Dataset Output")
+        dot.edges(["AB", "BC", "CD", "DE"])
+
+    elif dataset_type == "Incidents (Events)":
+        dot.attr("node", shape="box", style="rounded,filled", color="#b23b3b", fillcolor="#f9e5e5")
+        dot.node("A", "User Inputs\n(Base rate, Weather, Time horizon)")
+        dot.node("B", "Non-Homogeneous Poisson Process\n(Incident arrival simulation)")
+        dot.node("C", "Assign Severity & Duration\n(Response / Clearance)")
+        dot.node("D", "Event Records\n(Incident Type, Hour, Severity)")
+        dot.node("E", "Synthetic Dataset Output")
+        dot.edges(["AB", "BC", "CD", "DE"])
+
+    elif dataset_type == "Accidents (Cases)":
+        dot.attr("node", shape="box", style="rounded,filled", color="#0a7d49", fillcolor="#e7f8ee")
+        dot.node("A", "User Inputs\n(Sample size, Weather)")
+        dot.node("B", "Gaussian Copula Sampling\n(Correlated Speed, Age, Reaction Time)")
+        dot.node("C", "Assign Environmental Factors\n(Lighting, Road Type)")
+        dot.node("D", "Injury Level Estimation\n(Probability-based Severity)")
+        dot.node("E", "Synthetic Dataset Output")
+        dot.edges(["AB", "BC", "CD", "DE"])
+
+    elif dataset_type == "Driver Behavior (Cross-Section)":
+        dot.attr("node", shape="box", style="rounded,filled", color="#3a3a9f", fillcolor="#e7e7fa")
+        dot.node("A", "User Inputs\n(Sample size, Seed)")
+        dot.node("B", "Gaussian Copula Correlation\n(Age, Experience, Reaction, Aggressiveness)")
+        dot.node("C", "Behavioral Derivation\n(Violations, Phone Use)")
+        dot.node("D", "Synthetic Dataset Output")
+        dot.edges(["AB", "BC", "CD"])
+
+    else:
+        dot.attr("node", shape="box", style="rounded,filled", color="#555", fillcolor="#eee")
+        dot.node("A", "Parameter Inputs")
+        dot.node("B", "Data Generation Logic")
+        dot.node("C", "Output Dataset")
+
+    st.graphviz_chart(dot)
 
 
 # ------------------------- Downloads -------------------------
